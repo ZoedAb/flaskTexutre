@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import ElementClickInterceptedException
-
+from dotenv import load_dotenv
 import time
 from datetime import date
 import os
@@ -13,6 +13,7 @@ import zipfile
 import glob
 import base64
 import shutil
+load_dotenv()
 CHROME_DRIVER_PATH = os.path.join(os.getcwd(), "chromedriver.exe")
 EDGE_DRIVER_PATH = os.path.join(os.getcwd(), "msedgedriver.exe")
 DOWNLOAD_PATH = os.path.join(os.getcwd(), "Download")
@@ -24,7 +25,7 @@ OP.add_experimental_option("prefs", {
   "download.directory_upgrade": True,
   "safebrowsing.enabled": True
 })
-OP.add_argument('--headless=new')
+#OP.add_argument('--headless=new')
 DRIVER = None
 # OP = webdriver.EdgeOptions()
 # DRIVER = webdriver.Edge(options=OP)
@@ -64,40 +65,29 @@ def addTask(task):
 
 
 def login():
-    with open('config.json') as configFile:
-        credentials = json.load(configFile)
-        time.sleep(3)
-        #DRIVER.find_element(By.XPATH, value="//a[@href='/https://id.atlassian.com/login?application=trello&continue=https%3A%2F%2Ftrello.com%2Fauth%2Fatlassian%2Fcallback%3Fdisplay%3DeyJ2ZXJpZmljYXRpb25TdHJhdGVneSI6InNvZnQifQ%253D%253D&display=eyJ2ZXJpZmljYXRpb25TdHJhdGVneSI6InNvZnQifQ%3D%3D']").click()
-        DRIVER.find_element(By.CSS_SELECTOR, value="button[class='styles_authLink__UkM93 styles_elevated__qKQOV css-kxamqc']").click()
-        
-        time.sleep(2)
-        DRIVER.find_element(By.CSS_SELECTOR, value="button[class='styles_secondaryClear__32mUA styles_l__vHx1i styles_rect__lTWI7']").click()
-        time.sleep(4)
-        wait = WebDriverWait(DRIVER, 60)  # wait up to 10 seconds
-        username = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="email"]')))
-        username = DRIVER.find_element(
-            By.CSS_SELECTOR, value="input[type='email']")
-        username.clear()
-        username.send_keys(credentials["USERNAME"])
-        
-        #DRIVER.find_element(By.CSS_SELECTOR,value="button[type='submit']").click()
-        time.sleep(1)
-        password = DRIVER.find_element(
-            By.CSS_SELECTOR, value="input[type='password']")
-        #username.clear()
-        password.clear()
-        password.send_keys(credentials["PASSWORD"])
-        time.sleep(2)
-        DRIVER.find_element( By.CSS_SELECTOR,value="button[class='css-y0q9se']").click()
-        
-        #DRIVER.find_element_by_css_selector("input[type='submit']").click()
-        
-        # password = DRIVER.find_element(
-        #     By.CSS_SELECTOR, value="input[name='password']")
-        # password.clear()
-        # password.send_keys(credentials["PASSWORD"])
-        # time.sleep(5)
-        # DRIVER.find_element_by_css_selector("button[type='submit']").click()
+    time.sleep(3)
+    #DRIVER.find_element(By.XPATH, value="//a[@href='/https://id.atlassian.com/login?application=trello&continue=https%3A%2F%2Ftrello.com%2Fauth%2Fatlassian%2Fcallback%3Fdisplay%3DeyJ2ZXJpZmljYXRpb25TdHJhdGVneSI6InNvZnQifQ%253D%253D&display=eyJ2ZXJpZmljYXRpb25TdHJhdGVneSI6InNvZnQifQ%3D%3D']").click()
+    DRIVER.find_element(By.CSS_SELECTOR, value="button[class='styles_authLink__UkM93 styles_elevated__qKQOV css-kxamqc']").click()
+    
+    time.sleep(2)
+    DRIVER.find_element(By.CSS_SELECTOR, value="button[class='styles_secondaryClear__32mUA styles_l__vHx1i styles_rect__lTWI7']").click()
+    time.sleep(4)
+    wait = WebDriverWait(DRIVER, 60)  # wait up to 10 seconds
+    username = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="email"]')))
+    username = DRIVER.find_element(
+        By.CSS_SELECTOR, value="input[type='email']")
+    username.clear()
+    username.send_keys(os.getenv("EMAIL"))
+    
+    #DRIVER.find_element(By.CSS_SELECTOR,value="button[type='submit']").click()
+    time.sleep(1)
+    password = DRIVER.find_element(
+        By.CSS_SELECTOR, value="input[type='password']")
+    #username.clear()
+    password.clear()
+    password.send_keys(os.getenv("PASSWORD"))
+    time.sleep(2)
+    DRIVER.find_element( By.CSS_SELECTOR,value="button[class='css-y0q9se']").click()
 
 
 def navigateToBoard(task):
