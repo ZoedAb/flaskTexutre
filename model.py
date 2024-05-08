@@ -13,7 +13,7 @@ MODEL_ID = "dream-textures/texture-diffusion"
 
 def generate(prompt):
     pipe = StableDiffusionPipeline.from_pretrained(MODEL_ID, torch_dtype=torch.float16)
-    pipe = pipe.to("cuda")
+    pipe = pipe.to("cpu")
     images_json = {}
     image = pipe(prompt).images[0]  
     buffered = BytesIO()
